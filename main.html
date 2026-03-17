@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>НТО ИИ — итоговый рейтинг (предметы + инженерка)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #edf2f9;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 25px 45px -12px #152b4b33;
+            padding: 32px 36px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin: 0;
+            color: #0e2442;
+            letter-spacing: -0.5px;
+        }
+        .header .badge {
+            background: #dce5f8;
+            border-radius: 60px;
+            padding: 8px 26px;
+            font-weight: 500;
+            color: #1f3f77;
+            border: 1px solid #acc2ea;
+        }
+        .subhead {
+            margin: 0 0 28px 0;
+            color: #284a7a;
+            font-size: 1.2rem;
+            border-left: 6px solid #3f6ab3;
+            padding-left: 22px;
+            background: #f1f6fe;
+            border-radius: 0 40px 40px 0;
+            line-height: 2.2;
+        }
+        .formula-badge {
+            background: #e0e9ff;
+            padding: 10px 25px;
+            border-radius: 60px;
+            font-weight: 500;
+            color: #103368;
+            border: 1px dashed #537bcb;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .file-info {
+            background: #f6f9ff;
+            border-radius: 28px;
+            padding: 16px 28px;
+            margin-bottom: 20px;
+            border: 1px solid #c7d7f3;
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .file-item {
+            background: white;
+            border-radius: 60px;
+            padding: 8px 25px;
+            border: 1px solid #adc4ee;
+            font-weight: 500;
+        }
+        .file-item span {
+            color: #2f5bb7;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+        .status {
+            background: #e7eefb;
+            border-radius: 50px;
+            padding: 14px 28px;
+            margin: 20px 0;
+            font-weight: 500;
+            color: #102f5e;
+        }
+        .status.error {
+            background: #ffe3e3;
+            color: #b12b2b;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 28px;
+            border: 1px solid #d3dff2;
+            background: white;
+            margin-top: 22px;
+            box-shadow: 0 6px 16px #ccd9ed70;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 1200px;
+        }
+        th {
+            background: #e2ecfc;
+            color: #0f2d57;
+            font-weight: 600;
+            padding: 18px 12px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #dee8f5;
+            text-align: center;
+        }
+        td:first-child, th:first-child {
+            text-align: center;
+            width: 60px;
+        }
+        td:nth-child(2), th:nth-child(2) {
+            text-align: left;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background: #f6fafe;
+        }
+        .math-col {
+            background-color: #f0f6ff;
+            font-weight: 500;
+        }
+        .inf-col {
+            background-color: #f9f1ff;
+            font-weight: 500;
+        }
+        .sum-col {
+            background-color: #e6f0fa;
+            font-weight: 600;
+        }
+        .subject-total-col {
+            background: #e5f3e7;
+            font-weight: 700;
+            color: #1b6e3b;
+        }
+        .eng-col {
+            background-color: #fff2e6;
+            font-weight: 500;
+            color: #8a4b1a;
+        }
+        .final-col {
+            background: #d9ebf5;
+            font-weight: 800;
+            color: #0b4b7a;
+            font-size: 1.05rem;
+        }
+        .name-col {
+            font-weight: 600;
+            color: #041d41;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 30px;
+            display: flex;
+            gap: 25px;
+            background: #eef4fd;
+            border-radius: 60px;
+            padding: 14px 30px;
+            color: #1b3c70;
+            flex-wrap: wrap;
+        }
+        .footer span {
+            background: white;
+            border-radius: 60px;
+            padding: 6px 24px;
+            border: 1px solid #b8cef1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🧠 НТО · Искусственный интеллект</h1>
+        <div class="badge">2025/26 · итоговый рейтинг</div>
+    </div>
+
+    <div id="statusMsg" class="status">🔄 загрузка файлов...</div>
+
+    <div class="table-wrapper">
+        <table id="mainTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Участник</th>
+                    <th>Математика</th>
+                    <th>Информатика</th>
+                    <th>Сумма предметов</th>
+                    <th>Предметы ×0.15</th>
+                    <th>Инженерка</th>
+                    <th>Инженерка ×0.7</th>
+                    <th>Общий балл</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="9" style="text-align:center; padding:48px;">⏳ загрузка данных...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <span id="counterSpan">участников: 0</span>
+        <span>⚖️ предметы ×0.15 + инженерка ×0.7</span>
+        <span>🔸 инженерный тур — 0 (заглушка)</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const statusDiv = document.getElementById('statusMsg');
+        const tableBody = document.getElementById('tableBody');
+        const counterSpan = document.getElementById('counterSpan');
+
+        // нормализация ФИО
+        function normalize(fio) {
+            return fio.trim().replace(/\s+/g, ' ').toLowerCase();
+        }
+
+        // Умный парсинг строки CSV (таб, запятая, или пробелы)
+        function parseCsvLines(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            const rows = [];
+            for (let line of lines) {
+                line = line.trim();
+                let parts = [];
+                if (line.includes('\t')) {
+                    parts = line.split('\t').map(s => s.trim());
+                } else if (line.includes(',')) {
+                    parts = line.split(',').map(s => s.trim());
+                } else {
+                    // Регулярка для формата "ФИО число число число ..."
+                    const match = line.match(/^([А-ЯЁа-яё\s-]+?)\s+(\d+)(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?/);
+                    if (match) {
+                        // first group - fio, rest are numbers
+                        const fio = match[1].trim();
+                        const numbers = match.slice(2).filter(v => v !== undefined).map(v => parseInt(v, 10));
+                        if (numbers.length > 0) {
+                            parts = [fio, ...numbers.map(n => n.toString())];
+                        }
+                    }
+                }
+                if (parts.length >= 2) rows.push(parts);
+            }
+            return rows;
+        }
+
+        // Математика: первый столбец ФИО, второй столбец итог
+        function extractMath(text) {
+            const map = new Map();
+            const rows = parseCsvLines(text);
+            for (let p of rows) {
+                if (p.length < 2) continue;
+                const fio = p[0];
+                const val = parseInt(p[1], 10);
+                if (isNaN(val)) continue;
+                map.set(normalize(fio), { fio, math: val });
+            }
+            return map;
+        }
+
+        // Информатика: первый столбец ФИО, последний столбец итог
+        function extractInf(text) {
+            const map = new Map();
+            const rows = parseCsvLines(text);
+            for (let p of rows) {
+                if (p.length < 2) continue;
+                const fio = p[0];
+                const lastVal = p[p.length - 1];
+                const val = parseInt(lastVal, 10);
+                if (isNaN(val)) continue;
+                map.set(normalize(fio), { fio, inf: val });
+            }
+            return map;
+        }
+
+        async function loadFiles() {
+            try {
+                statusDiv.innerText = '⏳ Чтение files/math.csv и files/infa.csv...';
+                statusDiv.className = 'status';
+
+                // Пытаемся загрузить через fetch (файлы в подпапке files/)
+                const mathResp = await fetch('files/math.csv');
+                const infResp = await fetch('files/infa.csv');
+
+                if (!mathResp.ok) throw new Error(`math.csv не найден в папке files (${mathResp.status})`);
+                if (!infResp.ok) throw new Error(`infa.csv не найден в папке files (${infResp.status})`);
+
+                const mathText = await mathResp.text();
+                const infText = await infResp.text();
+
+                const mathMap = extractMath(mathText);
+                const infMap = extractInf(infText);
+
+                if (mathMap.size === 0) throw new Error('Не удалось извлечь данные из math.csv (проверьте формат)');
+                if (infMap.size === 0) throw new Error('Не удалось извлечь данные из infa.csv (проверьте формат)');
+
+                // Объединение данных
+                const combined = new Map();
+
+                // Добавляем всех из математики
+                for (let [norm, data] of mathMap.entries()) {
+                    combined.set(norm, {
+                        fio: data.fio,
+                        math: data.math,
+                        inf: 0
+                    });
+                }
+
+                // Добавляем/дополняем из информатики
+                for (let [norm, data] of infMap.entries()) {
+                    if (combined.has(norm)) {
+                        combined.get(norm).inf = data.inf;
+                    } else {
+                        combined.set(norm, {
+                            fio: data.fio,
+                            math: 0,
+                            inf: data.inf
+                        });
+                    }
+                }
+
+                // Формируем массив с вычислениями
+                const entries = Array.from(combined.values()).map(item => {
+                    const sum = item.math + item.inf;
+                    const subjectPart = sum * 0.15;
+                    const engineering = 0; // пока заглушка
+                    const engPart = engineering * 0.7;
+                    const total = subjectPart + engPart;
+
+                    return {
+                        fio: item.fio,
+                        math: item.math,
+                        inf: item.inf,
+                        sum: sum,
+                        subjectPart: Math.round(subjectPart * 100) / 100,
+                        engineering: engineering,
+                        engPart: Math.round(engPart * 100) / 100,
+                        total: Math.round(total * 100) / 100
+                    };
+                }).sort((a, b) => {
+                    // Сортировка по убыванию общего балла, при равенстве — по сумме предметов
+                    if (b.total !== a.total) return b.total - a.total;
+                    return b.sum - a.sum;
+                });
+
+                // Рендер таблицы с нумерацией
+                tableBody.innerHTML = '';
+                entries.forEach((e, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td class="name-col">${e.fio}</td>
+                        <td class="math-col">${e.math}</td>
+                        <td class="inf-col">${e.inf}</td>
+                        <td class="sum-col">${e.sum}</td>
+                        <td class="subject-total-col">${e.subjectPart.toFixed(2)}</td>
+                        <td class="eng-col">${e.engineering}</td>
+                        <td class="eng-col">${e.engPart.toFixed(2)}</td>
+                        <td class="final-col">${e.total.toFixed(2)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                counterSpan.innerText = `участников: ${entries.length}`;
+                statusDiv.innerText = `✅ Загружено ${entries.length} участников. Сортировка по итоговому баллу ↓`;
+                statusDiv.className = 'status';
+
+            } catch (err) {
+                console.error(err);
+                statusDiv.innerText = '❌ Ошибка: ' + err.message;
+                statusDiv.className = 'status error';
+                tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:48px; color:#b12b2b;">❌ не удалось загрузить данные</td></tr>`;
+            }
+        }
+
+        // Автоматический запуск при загрузке страницы
+        window.addEventListener('load', loadFiles);
+    })();
+</script>
+</body>
+</html>
